@@ -17,11 +17,11 @@ def caesar_encryption(message, offset, decode=False):
     '''
     Encrypts or decrypts the message entered by the user using Caesar cipher.
     >>> caesar_encryption("Caesar", 3)
-    "FDHVDU"
+    'FDHVDU'
     >>> caesar_encryption("FDHVDU", 3, True)
-    "CAESAR"
+    'CAESAR'
     '''
-    cipherMessage = ""
+    CaesarsCodeMessage = ""
     for letter in unidecode(message).upper():
         if letter not in string.digits and letter not in string.punctuation and letter not in string.whitespace:
             if decode:
@@ -32,27 +32,27 @@ def caesar_encryption(message, offset, decode=False):
                 newLetter = define_position_letter(letter) + offset
                 if newLetter > 25:
                     newLetter -= 26
-            cipherMessage += chr(newLetter + 65)
+            CaesarsCodeMessage += chr(newLetter + 65)
         else:
-            cipherMessage += letter
-    print(f"\nLe message d'origine est:\n{''.join(cipherMessage)}" if decode else f"\nVotre message chiffré est:\n{cipherMessage}")
+            CaesarsCodeMessage += letter
+    return CaesarsCodeMessage
 
 
 def substitution_encryption(message, key, decode=False):
     '''
     Encrypts or decrypts the message entered by the user using the substitution method.
-    >>> substitution_encryption("Substitution methode", ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'W', 'X', 'C', 'V', 'B', 'N'])
-    "LWZLMOMWMOGF DTMIGRT"
-    >>> substitution_encryption("Substitution methode",  "AZERTYUIOPQSDFGHJKLMWXCVBN", True)
-    "SUBSTITUTION METHODE"
+    >>> substitution_encryption("Substitution", ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'W', 'X', 'C', 'V', 'B', 'N'])
+    'LWZLMOMWMOGF'
+    >>> substitution_encryption("LWZLMOMWMOGF",  "AZERTYUIOPQSDFGHJKLMWXCVBN", True)
+    'SUBSTITUTION'
     '''
     alphabet = string.ascii_uppercase
-    cipherMessage = ""
+    substitutionEncryptionMessage = ""
     for letter in unidecode(message).upper():
         search = key.find(letter) if decode else alphabet.find(letter)
-        cipherMessage += letter if search < 0 else alphabet[search] if decode else key[search]
-    print(
-        f"\nLe message d'origine est:\n{cipherMessage}" if decode else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{cipherMessage}")
+        substitutionEncryptionMessage += letter if search < 0 else alphabet[
+            search] if decode else key[search]
+    return substitutionEncryptionMessage
 
 
 def vigenere_encryption(message, key, decode=False):
@@ -76,21 +76,21 @@ def vigenere_encryption(message, key, decode=False):
             if define_position_letter(letterMessage) - \
                     define_position_letter(letterKey) < 0:
                 return chr(define_position_letter(letterMessage) -
-                        define_position_letter(letterKey) + 26 + 65)
+                           define_position_letter(letterKey) + 26 + 65)
             else:
                 return chr(define_position_letter(letterMessage) -
-                        define_position_letter(letterKey) + 65)
+                           define_position_letter(letterKey) + 65)
         else:
             if define_position_letter(letterMessage) + \
                     define_position_letter(letterKey) > 25:
                 return chr(define_position_letter(letterMessage) +
-                        define_position_letter(letterKey) - 26 + 65)
+                           define_position_letter(letterKey) - 26 + 65)
             else:
                 return chr(define_position_letter(letterMessage) +
-                        define_position_letter(letterKey) + 65)
+                           define_position_letter(letterKey) + 65)
 
     alphabet = string.ascii_uppercase
-    cipherMessage = []
+    VigeneresCodeMessage = []
     for counter, letter in enumerate(unidecode(message).replace(
             "'",
             '').replace(
@@ -102,14 +102,14 @@ def vigenere_encryption(message, key, decode=False):
             '').replace('\t', '').upper()):
         if letter in alphabet:
             if decode:
-                cipherMessage.append(
+                VigeneresCodeMessage.append(
                     define_corresponding_letter(
                         letter,
                         unidecode(key).upper()[
                             counter % len(
                                 unidecode(key).upper())], True))
             else:
-                cipherMessage.append(
+                VigeneresCodeMessage.append(
                     define_corresponding_letter(
                         letter,
                         unidecode(key).upper()[
@@ -117,5 +117,5 @@ def vigenere_encryption(message, key, decode=False):
                                 unidecode(key).upper())]))
     for counter, letter in enumerate(unidecode(message).upper()):
         if letter not in alphabet:
-            cipherMessage.insert(counter, letter)
-    print(f"\nLe message d'origine est:\n{''.join(cipherMessage)}" if decode else f"\nVotre message chiffré est:\n{''.join(cipherMessage)}")
+            VigeneresCodeMessage.insert(counter, letter)
+    return ''.join(VigeneresCodeMessage)
