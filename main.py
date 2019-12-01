@@ -11,6 +11,22 @@ listMethods = [
     "Chiffre de Vigenère"]
 
 
+def read_file(name):
+    """
+    Reads the content of a text file specified by the user.
+    """
+    file = open(name, 'r')
+    return file.read()
+
+
+def write_file(name, content):
+    """
+    Allows to write to a file.
+    """
+    with open(name, 'w') as file:
+        file.write(content)
+
+
 def leave_software():
     """
     Displays an end message when the user exits the program.
@@ -57,7 +73,7 @@ def do_you_want_to_continue():
             os.system("clear")
             show_error(answerKeyboard)
         answerKeyboard = input(
-            "Voulez-vous retourner au menu principal (O/N)? ")
+            "Voulez-vous retourner au menu principal [O/N] ? ")
         if answerKeyboard.upper() == 'O':
             os.system("clear")
             print("---------------------------------------------------------------")
@@ -78,15 +94,19 @@ def cipher_core():
         """
         Allows the user to choose to encrypt or decrypt a message he has in his possession.
         """
-        choiceOfOption = ''
+        choiceOfFormat = ''
+        choiceOfAction = ''
         print("---------------------------------------------------------------")
         print("                           OPTIONS")
         print("---------------------------------------------------------------")
-        print("1 - Chiffrer un message\n2 - Déchiffrer un message")
+        print("F - Fichier texte\nM - Message\n")
+        while choiceOfFormat.upper() != 'F' and choiceOfFormat.upper() != 'M':
+            choiceOfFormat = input("Quel format voulez-vous traiter [F/M] ? ")
+        print("\n1 - Chiffrer\n2 - Déchiffrer")
         print("---------------------------------------------------------------\n")
-        while choiceOfOption != '1' and choiceOfOption != '2':
-            choiceOfOption = input("Entrez l'index d'une de ces options: ")
-        return choiceOfOption
+        while choiceOfAction != '1' and choiceOfAction != '2':
+            choiceOfAction = input("Entrez l'index d'une de ces options: ")
+        return choiceOfFormat.upper() + choiceOfAction
 
     choiceOfCipherMethod = ''
     message = ''
@@ -109,8 +129,9 @@ def cipher_core():
         print("                      CHIFFRE DE CÉSAR")
         print("---------------------------------------------------------------")
         while not message:
-            message = input("Entrez votre message: ") if choiceOfOption == '1' else input(
-                "Entrez le message chiffré: ")
+            message = input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
+                "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
+                "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
         offset = input("Entrez la valeur du décalage: ")
         while offset.isnumeric() == False or int(offset) >= 26:
             if offset.isnumeric() == False:
@@ -120,12 +141,23 @@ def cipher_core():
             else:
                 offset = input(
                     "\nVous venez de dépasser la limite de décalage. (Max. 25)\nVeuillez entrer un nombre de décalage plus petit: ")
-        if choiceOfOption == '1':
-            caesar_encryption(message, int(offset))
-        else:
-            caesar_encryption(message, int(offset), True)
-        print(f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption ==
-              '1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
+        if choiceOfOption == "F1":
+            write_file(
+                'Cipherfile' + time.strftime("%d%m%Y%H%M%S"),
+                caesar_encryption(
+                    read_file(message),
+                    int(offset)))
+        elif choiceOfOption == "F2":
+            write_file(
+                'file',
+                caesar_encryption(
+                    read_file(message),
+                    int(offset),
+                    True))
+        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
+              'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
+              'F2' else f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption ==
+              'M1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '2':
         choiceOfOption = display_options_message()
@@ -159,7 +191,7 @@ def cipher_core():
             while len(key.replace(' ', '')) != 26 or key.isnumeric():
                 key = input("Entrez votre clé de chiffrement: ")
         print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption ==
-              '1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
+              'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '3':
         choiceOfOption = display_options_message()
@@ -172,7 +204,7 @@ def cipher_core():
                 "Entrez le message chiffré: ")
         key = input("Entrez votre clé de chiffrement: ")
         print(f"\nLe message d'origine est:\n{vigenere_encryption(message, key)}" if choiceOfOption ==
-              '1' else f"\nVotre message chiffré est:\n{vigenere_encryption(message, key, True)}")
+              'M1' else f"\nVotre message chiffré est:\n{vigenere_encryption(message, key, True)}")
 
         do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'C':
