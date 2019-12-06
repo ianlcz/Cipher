@@ -15,7 +15,7 @@ def read_file(name):
     """
     Reads the content of a text file specified by the user.
     """
-    file = open(name, 'r')
+    file = open(name, 'r', encoding="UTF-8")
     return file.read()
 
 
@@ -23,7 +23,7 @@ def write_file(name, content):
     """
     Allows to write to a file.
     """
-    with open(name, 'w') as file:
+    with open(name, 'w', encoding="UTF-8") as file:
         file.write(content)
 
 
@@ -143,13 +143,13 @@ def cipher_core():
                     "\nVous venez de dépasser la limite de décalage. (Max. 25)\nVeuillez entrer un nombre de décalage plus petit: ")
         if choiceOfOption == "F1":
             write_file(
-                'Cipherfile' + time.strftime("%d%m%Y%H%M%S"),
+                time.strftime("%d%m%Y%H%M%S"),
                 caesar_encryption(
                     read_file(message),
                     int(offset)))
         elif choiceOfOption == "F2":
             write_file(
-                'file',
+                time.strftime("%d%m%Y%H%M%S"),
                 caesar_encryption(
                     read_file(message),
                     int(offset),
@@ -167,9 +167,10 @@ def cipher_core():
         print("---------------------------------------------------------------")
         key = ''
         while not message:
-            message = input("Entrez votre message: ") if choiceOfOption == '1' else input(
-                "Entrez le message chiffré: ")
-        if choiceOfOption == '1':
+            message = input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
+                "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
+                "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
+        if choiceOfOption[1] == '1':
             print("\nCONFIGURATION DE L'ALPHABET DE SUBSTITUTION")
             for letterAlphabet in string.ascii_uppercase:
                 letterUser = input(f"\t{letterAlphabet}: ")
@@ -190,7 +191,19 @@ def cipher_core():
         else:
             while len(key.replace(' ', '')) != 26 or key.isnumeric():
                 key = input("Entrez votre clé de chiffrement: ")
-        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption ==
+        if choiceOfOption == "F1":
+            write_file(
+                time.strftime("%d%m%Y%H%M%S"),
+                substitution_encryption(read_file(message), unidecode(key).upper()))
+        elif choiceOfOption == "F2":
+            write_file(
+                time.strftime("%d%m%Y%H%M%S"),
+                substitution_encryption(
+                    read_file(message),
+                    unidecode(key).replace(' ', '').upper(), True))
+        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
+              'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
+              'F2' else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption ==
               'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '3':
