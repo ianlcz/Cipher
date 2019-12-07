@@ -194,7 +194,9 @@ def cipher_core():
         if choiceOfOption == "F1":
             write_file(
                 time.strftime("%d%m%Y%H%M%S"),
-                substitution_encryption(read_file(message), unidecode(key).upper()))
+                substitution_encryption(
+                    read_file(message),
+                    unidecode(key).upper()))
         elif choiceOfOption == "F2":
             write_file(
                 time.strftime("%d%m%Y%H%M%S"),
@@ -213,12 +215,26 @@ def cipher_core():
         print("                     CHIFFRE DE VIGENÈRE")
         print("---------------------------------------------------------------")
         while not message:
-            message = input("Entrez votre message: ") if choiceOfOption == '1' else input(
-                "Entrez le message chiffré: ")
+            message = input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
+                "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
+                "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
         key = input("Entrez votre clé de chiffrement: ")
-        print(f"\nLe message d'origine est:\n{vigenere_encryption(message, key)}" if choiceOfOption ==
-              'M1' else f"\nVotre message chiffré est:\n{vigenere_encryption(message, key, True)}")
-
+        if choiceOfOption == "F1":
+            write_file(
+                time.strftime("%d%m%Y%H%M%S"),
+                vigenere_encryption(
+                    read_file(message),
+                    key))
+        elif choiceOfOption == "F2":
+            write_file(
+                time.strftime("%d%m%Y%H%M%S"),
+                vigenere_encryption(
+                    read_file(message),
+                    key, True))
+        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
+              'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
+              'F2' else f"\nVotre message chiffré est:\n{''.join(vigenere_encryption(message, key))}" if choiceOfOption ==
+              'M1' else f"\nLe message d'origine est:\n{vigenere_encryption(message, key, True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'C':
         print("---------------------------------------------------------------")

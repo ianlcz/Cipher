@@ -64,6 +64,18 @@ def vigenere_encryption(message, key, decode=False):
     "J'ADORE ECOUTER LA RADIO TOUTE LA JOURNEE"
     """
 
+    def formatting_text(text):
+        """
+        Formats a capitalized text by removing accents, punctuation and spaces.
+        >>> formatting_text("That's one small step for a man; one giant leap for mankind.")
+        'THATSONESMALLSTEPFORAMANONEGIANTLEAPFORMANKIND'
+        """
+        textFormat = ''
+        charactersToEscape = string.punctuation + ' '
+        for character in text:
+            textFormat += '' if character in charactersToEscape else character
+        return unidecode(textFormat).upper()
+
     def define_corresponding_letter(letterMessage, letterKey, decode=False):
         """
         Return the letter corresponding to the letter of the message and the letter of the key.
@@ -91,30 +103,23 @@ def vigenere_encryption(message, key, decode=False):
 
     alphabet = string.ascii_uppercase
     VigeneresCodeMessage = []
-    for counter, letter in enumerate(unidecode(message).replace(
-            "'",
-            '').replace(
-            ' ',
-            '').replace(
-                ',',
-                '').replace(
-                    '.',
-            '').replace('\t', '').upper()):
+    for counter, letter in enumerate(formatting_text(message)):
         if letter in alphabet:
             if decode:
                 VigeneresCodeMessage.append(
                     define_corresponding_letter(
                         letter,
-                        unidecode(key).upper()[
+                        formatting_text(key)[
                             counter % len(
-                                unidecode(key).upper())], True))
+                                formatting_text(key))],
+                        True))
             else:
                 VigeneresCodeMessage.append(
                     define_corresponding_letter(
                         letter,
-                        unidecode(key).upper()[
+                        formatting_text(key)[
                             counter % len(
-                                unidecode(key).upper())]))
+                                formatting_text(key))]))
     for counter, letter in enumerate(unidecode(message).upper()):
         if letter not in alphabet:
             VigeneresCodeMessage.insert(counter, letter)
