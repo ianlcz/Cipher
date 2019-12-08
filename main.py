@@ -108,8 +108,16 @@ def cipher_core():
             choiceOfAction = input("Entrez l'index d'une de ces options: ")
         return choiceOfFormat.upper() + choiceOfAction
 
-    choiceOfCipherMethod = ''
+    def display_message_entry_information():
+        """
+        Allows the user to enter the path of the text file or message they want to encrypt or decrypt.
+        """
+        return input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
+            "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
+            "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
+
     message = ''
+    choiceOfCipherMethod = ''
     while choiceOfCipherMethod != '1' and choiceOfCipherMethod != '2' and choiceOfCipherMethod != '3' and choiceOfCipherMethod.upper(
     ) != 'C' and choiceOfCipherMethod.upper() != 'Q':
         if choiceOfCipherMethod != '':
@@ -129,9 +137,7 @@ def cipher_core():
         print("                      CHIFFRE DE CÉSAR")
         print("---------------------------------------------------------------")
         while not message:
-            message = input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
-                "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
-                "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
+            message = display_message_entry_information()
         offset = input("Entrez la valeur du décalage: ")
         while offset.isnumeric() == False or int(offset) >= 26:
             if offset.isnumeric() == False:
@@ -167,9 +173,7 @@ def cipher_core():
         print("---------------------------------------------------------------")
         key = ''
         while not message:
-            message = input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
-                "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
-                "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
+            message = display_message_entry_information()
         if choiceOfOption[1] == '1':
             print("\nCONFIGURATION DE L'ALPHABET DE SUBSTITUTION")
             for letterAlphabet in string.ascii_uppercase:
@@ -215,9 +219,7 @@ def cipher_core():
         print("                     CHIFFRE DE VIGENÈRE")
         print("---------------------------------------------------------------")
         while not message:
-            message = input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
-                "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
-                "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
+            message = display_message_entry_information()
         key = input("Entrez votre clé de chiffrement: ")
         if choiceOfOption == "F1":
             write_file(
