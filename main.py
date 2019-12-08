@@ -3,6 +3,7 @@
 import os
 import time
 import curses.ascii as ca
+from pathlib import Path
 from cipherlib import *
 
 listMethods = [
@@ -19,11 +20,13 @@ def read_file(name):
     return file.read()
 
 
-def write_file(name, content):
+def write_file(content):
     """
     Allows to write to a file.
     """
-    with open(name, 'w', encoding="UTF-8") as file:
+    if not os.path.exists(str(Path.home()) + "/cipherFolder"):
+        os.mkdir(str(Path.home()) + "/cipherFolder")
+    with open(time.strftime(f"{Path.home()}/cipherFolder/%d%m%Y%H%M%S"), 'w', encoding="UTF-8") as file:
         file.write(content)
 
 
@@ -112,9 +115,16 @@ def cipher_core():
         """
         Allows the user to enter the path of the text file or message they want to encrypt or decrypt.
         """
-        return input("Entrez le chemin de votre fichier: ") if choiceOfOption == "F1" else input(
-            "Entrez le chemin du fichier chiffré: ") if choiceOfOption == "F2" else input(
-            "Entrez votre message: ") if choiceOfOption == 'M1' else input("Entrez le message chiffré: ")
+        if choiceOfOption == "F1":
+            return str(Path.home()) + '/' + \
+                input(f"Entrez le chemin de votre fichier:\n{str(Path.home())}/")
+        elif choiceOfOption == "F2":
+            return str(Path.home()) + '/cipherFolder/' + input(
+                f"Entrez le chemin du fichier chiffré:\n{str(Path.home())}/cipherFolder/")
+        elif choiceOfOption == "M1":
+            return input("Entrez votre message: ")
+        else:
+            return input("Entrez le message chiffré: ")
 
     message = ''
     choiceOfCipherMethod = ''
@@ -149,21 +159,17 @@ def cipher_core():
                     "\nVous venez de dépasser la limite de décalage. (Max. 25)\nVeuillez entrer un nombre de décalage plus petit: ")
         if choiceOfOption == "F1":
             write_file(
-                time.strftime("%d%m%Y%H%M%S"),
                 caesar_encryption(
                     read_file(message),
                     int(offset)))
         elif choiceOfOption == "F2":
             write_file(
-                time.strftime("%d%m%Y%H%M%S"),
                 caesar_encryption(
                     read_file(message),
                     int(offset),
                     True))
-        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
-              'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
-              'F2' else f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption ==
-              'M1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
+        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption == 'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption ==
+              'F2' else f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '2':
         choiceOfOption = display_options_message()
@@ -197,20 +203,16 @@ def cipher_core():
                 key = input("Entrez votre clé de chiffrement: ")
         if choiceOfOption == "F1":
             write_file(
-                time.strftime("%d%m%Y%H%M%S"),
                 substitution_encryption(
                     read_file(message),
                     unidecode(key).upper()))
         elif choiceOfOption == "F2":
             write_file(
-                time.strftime("%d%m%Y%H%M%S"),
                 substitution_encryption(
                     read_file(message),
                     unidecode(key).replace(' ', '').upper(), True))
-        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
-              'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
-              'F2' else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption ==
-              'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
+        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption == 'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption ==
+              'F2' else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '3':
         choiceOfOption = display_options_message()
@@ -223,20 +225,16 @@ def cipher_core():
         key = input("Entrez votre clé de chiffrement: ")
         if choiceOfOption == "F1":
             write_file(
-                time.strftime("%d%m%Y%H%M%S"),
                 vigenere_encryption(
                     read_file(message),
                     key))
         elif choiceOfOption == "F2":
             write_file(
-                time.strftime("%d%m%Y%H%M%S"),
                 vigenere_encryption(
                     read_file(message),
                     key, True))
-        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
-              'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ" if choiceOfOption ==
-              'F2' else f"\nVotre message chiffré est:\n{''.join(vigenere_encryption(message, key))}" if choiceOfOption ==
-              'M1' else f"\nLe message d'origine est:\n{vigenere_encryption(message, key, True)}")
+        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption == 'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption ==
+              'F2' else f"\nVotre message chiffré est:\n{''.join(vigenere_encryption(message, key))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{vigenere_encryption(message, key, True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'C':
         print("---------------------------------------------------------------")
