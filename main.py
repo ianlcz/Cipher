@@ -126,6 +126,15 @@ def cipher_core():
         else:
             return input("Entrez le message chiffré: ")
 
+    def create_overview(name, number):
+        """
+        Allows you to create an overview of text file.
+        """
+        if len(name.split(' ')) > number:
+            return ' '.join(name.split(' ')[:number])
+        else:
+            return ' '.join(name.split(' ')).replace('\n', '')
+
     message = ''
     choiceOfCipherMethod = ''
     while choiceOfCipherMethod != '1' and choiceOfCipherMethod != '2' and choiceOfCipherMethod != '3' and choiceOfCipherMethod.upper(
@@ -168,7 +177,7 @@ def cipher_core():
                     read_file(message),
                     int(offset),
                     True))
-        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption == 'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption ==
+        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(caesar_encryption(read_file(message), int(offset)), 20)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/" if choiceOfOption ==
               'F2' else f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '2':
@@ -181,7 +190,7 @@ def cipher_core():
         while not message:
             message = display_message_entry_information()
         if choiceOfOption[1] == '1':
-            print("\nCONFIGURATION DE L'ALPHABET DE SUBSTITUTION")
+            print("\nCONFIGURATION DE L'ALPHABET DE SUBSTITUTION\n")
             for letterAlphabet in string.ascii_uppercase:
                 letterUser = input(f"\t{letterAlphabet}: ")
                 while len(letterUser) != 1 or letterUser.upper() in key or letterUser.isnumeric(
@@ -211,7 +220,7 @@ def cipher_core():
                 substitution_encryption(
                     read_file(message),
                     unidecode(key).replace(' ', '').upper(), True))
-        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption == 'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption ==
+        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(substitution_encryption(read_file(message), unidecode(key).upper()), 20)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/" if choiceOfOption ==
               'F2' else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '3':
@@ -233,7 +242,7 @@ def cipher_core():
                 vigenere_encryption(
                     read_file(message),
                     key, True))
-        print(f"\n\t\t      CHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption == 'F1' else f"\n\t\t    DÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n\t\t\t\t     {Path.home()}/cipherFolder/" if choiceOfOption ==
+        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(vigenere_encryption(read_file(message), key), 20)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/" if choiceOfOption ==
               'F2' else f"\nVotre message chiffré est:\n{''.join(vigenere_encryption(message, key))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{vigenere_encryption(message, key, True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'C':
