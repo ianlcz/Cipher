@@ -20,14 +20,18 @@ def read_file(name):
     return file.read()
 
 
-def write_file(content):
+def write_file(content, specifyFolder=False):
     """
     Allows to write to a file.
     """
-    if not os.path.exists(str(Path.home()) + "/cipherFolder"):
-        os.mkdir(str(Path.home()) + "/cipherFolder")
-    with open(time.strftime(f"{Path.home()}/cipherFolder/%d%m%Y%H%M%S"), 'w', encoding="UTF-8") as file:
+    if not specifyFolder:
+        specifyFolder = "cipherFolder"
+    while not os.path.exists(str(Path.home()) + '/' + specifyFolder + '/'):
+        os.makedirs(str(Path.home()) + '/' + specifyFolder)
+    with open(f"{time.strftime(str(Path.home()) + '/' + specifyFolder + '/' + '%d%m%Y%H%M%S')}", 'w', encoding="UTF-8") as file:
         file.write(content)
+    return str(Path.home()) + '/' + specifyFolder + \
+        '/' + time.strftime('%d%m%Y%H%M%S')
 
 
 def leave_software():
@@ -139,7 +143,7 @@ def cipher_core():
         if choiceOfCipherMethod != '':
             os.system("clear")
             show_error(choiceOfCipherMethod)
-        print("Méthodes de chiffrement disponibles:")
+        print("Méthodes d'encodage disponibles:")
         for index, nameMethods in enumerate(listMethods, 1):
             print(f"{index} - {nameMethods}")
         print("\nC - Crédits\nQ - Sortir de Cipher\n---------------------------------------------------------------")
@@ -148,6 +152,8 @@ def cipher_core():
         os.system("clear")
     if choiceOfCipherMethod == '1':
         choiceOfOption = display_options_message()
+        choiceOfFolder = ''
+        nameFolder = ''
         os.system("clear")
         print("---------------------------------------------------------------")
         print("                      CHIFFRE DE CÉSAR")
@@ -169,16 +175,34 @@ def cipher_core():
                     read_file(message),
                     int(offset)))
         elif choiceOfOption == "F2":
-            write_file(
-                caesar_encryption(
-                    read_file(message),
-                    int(offset),
-                    True))
-        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(caesar_encryption(read_file(message), int(offset)), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/" if choiceOfOption ==
+            while choiceOfFolder.upper() != 'O' and choiceOfFolder.upper() != 'N':
+                choiceOfFolder = input(
+                    "\nSouhaitez-vous enregistrer le fichier déchiffré dans un dossier\nprécis [O/N] ? ")
+            if choiceOfFolder.upper() == 'O':
+                pathFolder = input(
+                    f"\nVeuillez indiquer le chemin vers ce dossier:\n{Path.home()}/").replace('//', '/')
+                if pathFolder[-1] == '/':
+                    list_pathFolder = list(pathFolder)
+                    list_pathFolder.pop(-1)
+                    pathFolder = ''.join(list_pathFolder)
+                nameFolder = write_file(
+                    caesar_encryption(
+                        read_file(message),
+                        int(offset),
+                        True), pathFolder)
+            else:
+                nameFolder = write_file(
+                    caesar_encryption(
+                        read_file(message),
+                        int(offset),
+                        True))
+        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(caesar_encryption(read_file(message), int(offset)), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
               'F2' else f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '2':
         choiceOfOption = display_options_message()
+        choiceOfFolder = ''
+        nameFolder = ''
         os.system("clear")
         print("---------------------------------------------------------------")
         print("                 CHIFFREMENT PAR SUBSTITUTION")
@@ -213,15 +237,32 @@ def cipher_core():
                     read_file(message),
                     unidecode(key).upper()))
         elif choiceOfOption == "F2":
-            write_file(
-                substitution_encryption(
-                    read_file(message),
-                    unidecode(key).replace(' ', '').upper(), True))
-        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(substitution_encryption(read_file(message), unidecode(key).upper()), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/" if choiceOfOption ==
+            while choiceOfFolder.upper() != 'O' and choiceOfFolder.upper() != 'N':
+                choiceOfFolder = input(
+                    "\nSouhaitez-vous enregistrer le fichier déchiffré dans un dossier\nprécis [O/N] ? ")
+            if choiceOfFolder.upper() == 'O':
+                pathFolder = input(
+                    f"\nVeuillez indiquer le chemin vers ce dossier:\n{Path.home()}/").replace('//', '/')
+                if pathFolder[-1] == '/':
+                    list_pathFolder = list(pathFolder)
+                    list_pathFolder.pop(-1)
+                    pathFolder = ''.join(list_pathFolder)
+                nameFolder = write_file(
+                    substitution_encryption(
+                        read_file(message), unidecode(key).replace(
+                            ' ', '').upper(), True), pathFolder)
+            else:
+                nameFolder = write_file(
+                    substitution_encryption(
+                        read_file(message), unidecode(key).replace(
+                            ' ', '').upper(), True))
+        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(substitution_encryption(read_file(message), unidecode(key).upper()), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
               'F2' else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '3':
         choiceOfOption = display_options_message()
+        choiceOfFolder = ''
+        nameFolder = ''
         os.system("clear")
         print("---------------------------------------------------------------")
         print("                     CHIFFRE DE VIGENÈRE")
@@ -235,11 +276,28 @@ def cipher_core():
                     read_file(message),
                     key))
         elif choiceOfOption == "F2":
-            write_file(
-                vigenere_encryption(
-                    read_file(message),
-                    key, True))
-        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(vigenere_encryption(read_file(message), key), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/" if choiceOfOption ==
+            while choiceOfFolder.upper() != 'O' and choiceOfFolder.upper() != 'N':
+                choiceOfFolder = input(
+                    "\nSouhaitez-vous enregistrer le fichier déchiffré dans un dossier\nprécis [O/N] ? ")
+            if choiceOfFolder == 'O':
+                pathFolder = input(
+                    f"\nVeuillez indiquer le chemin vers ce dossier:\n{Path.home()}/").replace('//', '/')
+                if pathFolder[-1] == '/':
+                    list_pathFolder = list(pathFolder)
+                    list_pathFolder.pop(-1)
+                    pathFolder = ''.join(list_pathFolder)
+                nameFolder = write_file(
+                    vigenere_encryption(
+                        read_file(message),
+                        key,
+                        True),
+                    pathFolder)
+            else:
+                write_file(
+                    vigenere_encryption(
+                        read_file(message),
+                        key, True))
+        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(vigenere_encryption(read_file(message), key), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
               'F2' else f"\nVotre message chiffré est:\n{''.join(vigenere_encryption(message, key))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{vigenere_encryption(message, key, True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'C':
@@ -259,5 +317,5 @@ os.system("clear")
 print("---------------------------------------------------------------")
 print("                    BIENVENUE DANS CIPHER")
 print("---------------------------------------------------------------")
-print("Cette application chiffre et déchiffre des messages en fonction\nde plusieurs méthodes de chiffrement synchrone.\n")
+print("Cette application encode et décode des messages.\n")
 cipher_core()
