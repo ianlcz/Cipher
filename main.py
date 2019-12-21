@@ -9,7 +9,8 @@ from cipherlib import *
 listMethods = [
     "Chiffre de César",
     "Chiffrement par substitution",
-    "Chiffre de Vigenère"]
+    "Chiffre de Vigenère",
+    "Code Morse international"]
 
 
 def read_file(name):
@@ -38,7 +39,8 @@ def leave_software():
     """
     Displays an end message when the user exits the program.
     """
-    print("\t\tMerci d'avoir utilisé Cipher\n\n\t\t\t\t\t\t    Yann LE COZ")
+    print(
+        f"\t\tMerci d'avoir utilisé Cipher\n\n\t\t\t\t\t\t{' ' * 4}Yann LE COZ")
     time.sleep(2)
     os.system("clear")
 
@@ -51,9 +53,7 @@ def show_error(
     """
     Displays an error message when the user enters incorrect characters.
     """
-    print("---------------------------------------------------------------")
-    print("                             ERREUR")
-    print("---------------------------------------------------------------")
+    print(f"{'-' * 63}\n{' ' * 29}ERREUR\n{'-' * 63}")
     if isNotNumeric:
         print(
             f"Le caractère que vous venez d'entrez ({keyboard}) n'est pas un chiffre.\n")
@@ -74,7 +74,7 @@ def do_you_want_to_continue():
     Allows the user to return to the main menu or exit the program.
     """
     answerKeyboard = ''
-    print("---------------------------------------------------------------\n")
+    print(f"{'-' * 63}\n")
     while answerKeyboard.upper() != 'O' and answerKeyboard.upper() != 'N':
         if answerKeyboard != '':
             os.system("clear")
@@ -83,9 +83,7 @@ def do_you_want_to_continue():
             "Voulez-vous retourner au menu principal [O/N] ? ")
         if answerKeyboard.upper() == 'O':
             os.system("clear")
-            print("---------------------------------------------------------------")
-            print("                         MENU PRINCIPAL")
-            print("---------------------------------------------------------------")
+            print(f"{'-' * 63}\n{' ' * 25}MENU PRINCIPAL\n{'-' * 63}")
             cipher_core()
         elif answerKeyboard.upper() == 'N':
             print("\n")
@@ -103,14 +101,11 @@ def cipher_core():
         """
         choiceOfFormat = ''
         choiceOfAction = ''
-        print("---------------------------------------------------------------")
-        print("                           OPTIONS")
-        print("---------------------------------------------------------------")
+        print(f"{'-' * 63}\n{' ' * 27}OPTIONS\n{'-' * 63}")
         print("F - Fichier texte\nM - Message\n")
         while choiceOfFormat.upper() != 'F' and choiceOfFormat.upper() != 'M':
             choiceOfFormat = input("Quel format voulez-vous traiter [F/M] ? ")
-        print("\n1 - Chiffrer\n2 - Déchiffrer")
-        print("---------------------------------------------------------------\n")
+        print(f"\n1 - Chiffrer\n2 - Déchiffrer\n{'-' * 63}\n")
         while choiceOfAction != '1' and choiceOfAction != '2':
             choiceOfAction = input("Entrez l'index d'une de ces options: ")
         return choiceOfFormat.upper() + choiceOfAction
@@ -138,7 +133,7 @@ def cipher_core():
 
     message = ''
     choiceOfCipherMethod = ''
-    while choiceOfCipherMethod != '1' and choiceOfCipherMethod != '2' and choiceOfCipherMethod != '3' and choiceOfCipherMethod.upper(
+    while choiceOfCipherMethod not in ['1', '2', '3', '4'] and choiceOfCipherMethod.upper(
     ) != 'C' and choiceOfCipherMethod.upper() != 'Q':
         if choiceOfCipherMethod != '':
             os.system("clear")
@@ -146,7 +141,7 @@ def cipher_core():
         print("Méthodes d'encodage disponibles:")
         for index, nameMethods in enumerate(listMethods, 1):
             print(f"{index} - {nameMethods}")
-        print("\nC - Crédits\nQ - Sortir de Cipher\n---------------------------------------------------------------")
+        print(f"\nC - Crédits\nQ - Sortir de Cipher\n{'-' * 63}")
         choiceOfCipherMethod = input("\nEntrez l'index d'une de ces options: ")
     if choiceOfCipherMethod.upper() != 'Q':
         os.system("clear")
@@ -155,9 +150,7 @@ def cipher_core():
         choiceOfFolder = ''
         nameFolder = ''
         os.system("clear")
-        print("---------------------------------------------------------------")
-        print("                      CHIFFRE DE CÉSAR")
-        print("---------------------------------------------------------------")
+        print(f"{'-' * 63}\n{' ' * 22}CHIFFRE DE CÉSAR\n{'-' * 63}")
         while not message:
             message = display_message_entry_information()
         offset = input("Entrez la valeur du décalage: ")
@@ -170,7 +163,7 @@ def cipher_core():
                 offset = input(
                     "\nVous venez de dépasser la limite de décalage. (Max. 25)\nVeuillez entrer un nombre de décalage plus petit: ")
         if choiceOfOption == "F1":
-            write_file(
+            nameFolder = write_file(
                 caesar_encryption(
                     read_file(message),
                     int(offset)))
@@ -189,14 +182,15 @@ def cipher_core():
                     caesar_encryption(
                         read_file(message),
                         int(offset),
-                        True), pathFolder)
+                        True),
+                    pathFolder)
             else:
                 nameFolder = write_file(
                     caesar_encryption(
                         read_file(message),
                         int(offset),
                         True))
-        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(caesar_encryption(read_file(message), int(offset)), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
+        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}\n\nAperçu:\n{create_overview(caesar_encryption(read_file(message), int(offset)), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
               'F2' else f"\nVotre message chiffré est:\n{''.join(caesar_encryption(message, int(offset)))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{caesar_encryption(message, int(offset), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '2':
@@ -204,9 +198,7 @@ def cipher_core():
         choiceOfFolder = ''
         nameFolder = ''
         os.system("clear")
-        print("---------------------------------------------------------------")
-        print("                 CHIFFREMENT PAR SUBSTITUTION")
-        print("---------------------------------------------------------------")
+        print(f"{'-' * 63}\n{' ' * 17}CHIFFREMENT PAR SUBSTITUTION\n{'-' * 63}")
         key = ''
         while not message:
             message = display_message_entry_information()
@@ -232,7 +224,7 @@ def cipher_core():
             while len(key.replace(' ', '')) != 26 or key.isnumeric():
                 key = input("Entrez votre clé de chiffrement: ")
         if choiceOfOption == "F1":
-            write_file(
+            nameFolder = write_file(
                 substitution_encryption(
                     read_file(message),
                     unidecode(key).upper()))
@@ -256,7 +248,7 @@ def cipher_core():
                     substitution_encryption(
                         read_file(message), unidecode(key).replace(
                             ' ', '').upper(), True))
-        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(substitution_encryption(read_file(message), unidecode(key).upper()), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
+        print(f"\nVotre clé de chiffrement est:\n{' '.join(key)}\n\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}\n\nAperçu:\n{create_overview(substitution_encryption(read_file(message), unidecode(key).upper()), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
               'F2' else f"\nVotre clé de chiffrement est:\n{' '.join(key)}\nVotre message chiffré est:\n{substitution_encryption(message, unidecode(key).upper())}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, unidecode(key).replace(' ', '').upper(), True)}")
         do_you_want_to_continue()
     elif choiceOfCipherMethod == '3':
@@ -264,17 +256,14 @@ def cipher_core():
         choiceOfFolder = ''
         nameFolder = ''
         os.system("clear")
-        print("---------------------------------------------------------------")
-        print("                     CHIFFRE DE VIGENÈRE")
-        print("---------------------------------------------------------------")
+        print(f"{'-' * 63}\n{' ' * 21}CHIFFRE DE VIGENÈRE\n{'-' * 63}")
         while not message:
             message = display_message_entry_information()
         key = input("Entrez votre clé de chiffrement: ")
         if choiceOfOption == "F1":
-            write_file(
+            nameFolder = write_file(
                 vigenere_encryption(
-                    read_file(message),
-                    key))
+                    read_file(message), key))
         elif choiceOfOption == "F2":
             while choiceOfFolder.upper() != 'O' and choiceOfFolder.upper() != 'N':
                 choiceOfFolder = input(
@@ -293,20 +282,57 @@ def cipher_core():
                         True),
                     pathFolder)
             else:
-                write_file(
+                nameFolder = write_file(
                     vigenere_encryption(
-                        read_file(message),
-                        key, True))
-        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{Path.home()}/cipherFolder/\n\nAperçu:\n{create_overview(vigenere_encryption(read_file(message), key), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
+                        read_file(message), key, True))
+        print(f"\n\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}\n\nAperçu:\n{create_overview(vigenere_encryption(read_file(message), key), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
               'F2' else f"\nVotre message chiffré est:\n{''.join(vigenere_encryption(message, key))}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{vigenere_encryption(message, key, True)}")
         do_you_want_to_continue()
+    elif choiceOfCipherMethod.upper() == '4':
+        choiceOfOption = display_options_message()
+        choiceOfFolder = ''
+        nameFolder = ''
+        encodableCharacters = string.ascii_uppercase + \
+            string.digits + '!\"$&\'()+,-./:;=?@_ '
+        os.system("clear")
+        print(f"{'-' * 63}\n{' ' * 20}CODE MORSE INTERNATIONAL\n{'-' * 63}")
+        while not message:
+            message = display_message_entry_information()
+        if choiceOfOption == "F1":
+            nameFolder = write_file(
+                substitution_encryption(
+                    read_file(message),
+                    morseCharacters, False, encodableCharacters))
+        elif choiceOfOption == "F2":
+            while choiceOfFolder.upper() != 'O' and choiceOfFolder.upper() != 'N':
+                choiceOfFolder = input(
+                    "\nSouhaitez-vous enregistrer le fichier déchiffré dans un dossier\nprécis [O/N] ? ")
+            if choiceOfFolder.upper() == 'O':
+                pathFolder = input(
+                    f"\nVeuillez indiquer le chemin vers ce dossier:\n{Path.home()}/").replace('//', '/')
+                if pathFolder[-1] == '/':
+                    list_pathFolder = list(pathFolder)
+                    list_pathFolder.pop(-1)
+                    pathFolder = ''.join(list_pathFolder)
+                nameFolder = write_file(
+                    substitution_encryption(
+                        read_file(message),
+                        morseCharacters,
+                        True,
+                        encodableCharacters),
+                    pathFolder)
+            else:
+                nameFolder = write_file(
+                    substitution_encryption(
+                        read_file(message),
+                        morseCharacters,
+                        True,
+                        encodableCharacters))
+        print(f"\nCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}\n\nAperçu:\n{create_overview(substitution_encryption(read_file(message), morseCharacters, False, encodableCharacters), 63)}" if choiceOfOption == 'F1' else f"\n\nDÉCHIFFREMENT DU CONTENU DU FICHIER TERMINÉ\n{nameFolder}" if choiceOfOption ==
+              'F2' else f"\nVotre message chiffré est:\n{substitution_encryption(message, morseCharacters, False, encodableCharacters)}" if choiceOfOption == 'M1' else f"\nLe message d'origine est:\n{substitution_encryption(message, morseCharacters, True, encodableCharacters)}")
+        do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'C':
-        print("---------------------------------------------------------------")
-        print("                          CRÉDITS")
-        print("---------------------------------------------------------------")
-        print("VERSION:                                                   v1.0")
-        print("\nAUTEUR:                                             Yann LE COZ")
-        print("ÉTABLISSEMENT:                             Bordeaux Ynov Campus")
+        print(f"{'-' * 63}\n{' ' * 26}CRÉDITS\n{'-' * 63}\nVERSION:{' ' * 51}v1.0\n\nAUTEUR:{' ' * 45}Yann LE COZ\nÉTABLISSEMENT:{' ' * 29}Bordeaux Ynov Campus")
         do_you_want_to_continue()
     elif choiceOfCipherMethod.upper() == 'Q':
         print("\n")
@@ -314,8 +340,5 @@ def cipher_core():
 
 
 os.system("clear")
-print("---------------------------------------------------------------")
-print("                    BIENVENUE DANS CIPHER")
-print("---------------------------------------------------------------")
-print("Cette application encode et décode des messages.\n")
+print(f"{'-' * 63}\n{' ' * 20}BIENVENUE DANS CIPHER\n{'-' * 63}\nCette application encode et décode des messages.\n")
 cipher_core()
