@@ -1,6 +1,63 @@
 import string
 from unidecode import unidecode
 
+morseCharacters = [
+    ".-",
+    "-...",
+    "-.-.",
+    "-..",
+    ".",
+    "..-.",
+    "--.",
+    "....",
+    "..",
+    ".---",
+    "-.-",
+    ".-..",
+    "--",
+    "-.",
+    "---",
+    ".--.",
+    "--.-",
+    ".-.",
+    "...",
+    "-",
+    "..-",
+    "...-",
+    ".--",
+    "-..-",
+    "-.--",
+    "--..",
+    "-----",
+    ".----",
+    "..---",
+    "...--",
+    "....-",
+    ".....",
+    "-....",
+    "--...",
+    "---..",
+    "----.",
+    "-.-.-----.",
+    ".-..-.",
+    "...-..-",
+    ".-...",
+    ".----.",
+    "-.--.",
+    "-.--.-",
+    ".-.-.",
+    "--..--",
+    "-....-",
+    ".-.-.-",
+    "-..-.",
+    "---...",
+    "-.-.-.",
+    "-...-",
+    "..--..",
+    ".--.-.",
+    "..--.-",
+    '/']
+
 
 def define_position_letter(letter):
     """
@@ -38,7 +95,11 @@ def caesar_encryption(message, offset, decode=False):
     return CaesarsCodeMessage
 
 
-def substitution_encryption(message, key, decode=False):
+def substitution_encryption(
+        message,
+        key,
+        decode=False,
+        alphabet=string.ascii_uppercase):
     '''
     Encrypts or decrypts the message entered by the user using the substitution method.
     >>> substitution_encryption("Substitution", ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'W', 'X', 'C', 'V', 'B', 'N'])
@@ -46,12 +107,20 @@ def substitution_encryption(message, key, decode=False):
     >>> substitution_encryption("LWZLMOMWMOGF",  "AZERTYUIOPQSDFGHJKLMWXCVBN", True)
     'SUBSTITUTION'
     '''
-    alphabet = string.ascii_uppercase
     substitutionEncryptionMessage = ""
-    for letter in unidecode(message).upper():
-        search = key.find(letter) if decode else alphabet.find(letter)
-        substitutionEncryptionMessage += letter if search < 0 else alphabet[
-            search] if decode else key[search]
+    if alphabet != string.ascii_uppercase and decode:
+        for letter in message.split(' '):
+            search = 0
+            for element in key:
+                if element != letter:
+                    search += 1
+                else:
+                    substitutionEncryptionMessage += alphabet[search]
+    else:
+        for letter in unidecode(message).upper():
+            search = key.find(letter) if decode else alphabet.find(letter)
+            substitutionEncryptionMessage += letter if search < 0 else alphabet[search] if decode else key[search] + \
+                ' ' if alphabet != string.ascii_uppercase else key[search]
     return substitutionEncryptionMessage
 
 
