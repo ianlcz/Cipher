@@ -19,6 +19,8 @@ Ce programme permet de **chiffrer** et de **déchiffrer** des messages entrés p
 Vous devriez alors obtenir la fenêtre suivante :
 ![Image finale](https://media.discordapp.net/attachments/688501463005003828/745358368490913812/unknown.png?width=1848&height=1086)
 
+Il vous reste plus qu'à suivre les informations à l'écran.
+
 ## Licence
 
 Ce programme est  sous licence [MIT](./LICENSE)
