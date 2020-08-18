@@ -10,6 +10,15 @@ Ce programme permet de **chiffrer** et de **déchiffrer** des messages entrés p
 
 **Yann LE COZ** - Bordeaux Ynov Campus Informatique - [ianlcz](https://github.com/ianlcz)
 
+## Utilisation
+
+1. Clonez le projet dans le répertoire de votre choix
+1. Rendez-vous à l'aide de votre terminal dans ce projet
+1. Tapez la commande suivante : ``python3 main.py``
+
+Vous devriez alors obtenir la fenêtre suivante :
+![Image finale](https://media.discordapp.net/attachments/688501463005003828/745358368490913812/unknown.png?width=1848&height=1086)
+
 ## Licence
 
 Ce programme est  sous licence [MIT](./LICENSE)
