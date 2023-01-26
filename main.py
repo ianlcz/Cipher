@@ -5,24 +5,29 @@ import click
 
 from exceptions.configurationvalidation import ConfigurationValidationException
 
-from converters.caesar import CaesarConverter
+from ciphers.caesar import CaesarCipher
 
 @click.group()
 @click.pass_context
 def cli(ctx):
+    '''
+    A CLI tool to encrypt or decrypt different messages using several encryption methods.
+    '''
     pass
 
 @cli.command()
-@click.option('--message', help='Message to be encrypted')
-@click.option('--offset', default=2, help='Character shift' )
+@click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
+@click.option('-s', '--shift', type=int, default=2, show_default=True, help='Character shift' )
+@click.option('-d', '--decrypted', is_flag=True, default=False, help='Allows to decrypt a message')
 @click.pass_context
-def caesar(ctx, message, offset):
+def caesar(ctx, message, shift, decrypted):
     '''
     Encrypt the message entered by the user using Caesar cipher
     '''
     if message:
-        caesar = CaesarConverter(message, offset)
-        logging.info(caesar.encrypt())
+        caesar = CaesarCipher(message, shift)
+
+        logging.info(caesar.decrypt() if decrypted else caesar.encrypt())
     else:
         raise AttributeError('Message to be encrypted not found')
 
