@@ -6,6 +6,7 @@ import click
 from exceptions.configurationvalidation import ConfigurationValidationException
 
 from ciphers.caesar import CaesarCipher
+from ciphers.vigenere import VigenereCipher
 
 @click.group()
 @click.pass_context
@@ -20,16 +21,25 @@ def cli(ctx):
 @click.option('-s', '--shift', type=int, default=2, show_default=True, help='Character shift' )
 @click.option('-d', '--decrypted', is_flag=True, default=False, help='Allows to decrypt a message')
 @click.pass_context
-def caesar(ctx, message, shift, decrypted):
+def caesar(ctx, message: str, shift: int, decrypted: bool):
     '''
-    Encrypt the message entered by the user using Caesar cipher
+    Encrypt or decrypt the message entered by the user using Caesar cipher
     '''
-    if message:
-        caesar = CaesarCipher(message, shift)
+    caesar = CaesarCipher(message, shift)
+    print(caesar.decrypt() if decrypted else caesar.encrypt())
 
-        logging.info(caesar.decrypt() if decrypted else caesar.encrypt())
-    else:
-        raise AttributeError('Message to be encrypted not found')
+    
+@cli.command()
+@click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
+@click.option('-k', '--key', type=str, prompt=True, help='Cipher key' )
+@click.option('-d', '--decrypted', is_flag=True, default=False, help='Allows to decrypt a message')
+@click.pass_context
+def vigenere(ctx, message: str, key: str, decrypted: bool):
+    '''
+    Encrypt or decrypt the message entered by the user using Vigenère cipher
+    '''
+    vigenere = VigenereCipher(message, key)
+    print(vigenere.decrypt() if decrypted else vigenere.encrypt())
 
 @click.command()
 def main() -> None:

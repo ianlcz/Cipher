@@ -5,13 +5,9 @@ from unidecode import unidecode
 from ciphers.cipher import Cipher
 
 class CaesarCipher(Cipher):
-    '''
-    Encryption by shifting
-    '''
-
-    def __init__(self, _source: str, offset: int) -> None:
+    def __init__(self, _source: str, __offset: int) -> None:
         Cipher.__init__(self, _source)
-        self.__offset = offset
+        self.__offset = __offset
 
     def encrypt(self) -> str:
         '''
