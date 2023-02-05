@@ -54,7 +54,14 @@ def substitution(ctx, message: str, alphabet: str, decrypted: bool):
     Encrypt or decrypt the message entrered by the user using Substitution cipher
     '''
     substitution = SubstitutionCipher(message, alphabet)
-    print(substitution.decrypt() if decrypted else substitution.encrypt())
+
+    if decrypted:
+        logging.info('substitution_decryption')
+        print(substitution.decrypt())
+    else:
+        logging.info("substitution_encryption")
+        print(substitution.encrypt())
+
 
 @cli.command()
 @click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
@@ -65,18 +72,13 @@ def morse(ctx, message: str, decrypted: bool):
     Encrypt or decrypt the message entrered by the user using Morse code
     '''
     morse = MorseCode(message)
-    print(morse.decrypt() if decrypted else morse.encrypt())
-
-@cli.command()
-@click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
-@click.option('-d', '--decrypted', is_flag=True, default=False, help='Allows to decrypt a message')
-@click.pass_context
-def morse(ctx, message: str, decrypted: bool):
-    '''
-    Encrypt or decrypt the message entrered by the user using Morse code
-    '''
-    morse = MorseCode(message)
-    print(morse.decrypt() if decrypted else morse.encrypt())
+    
+    if decrypted:
+        logging.info('morse_decryption')
+        print(morse.decrypt())
+    else:
+        logging.info('morse_encryption')
+        print(morse.encrypt())
 
 @click.command()
 def main() -> None:

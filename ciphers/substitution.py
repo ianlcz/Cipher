@@ -23,8 +23,6 @@ class SubstitutionCipher(Cipher):
         >>> encrypt("Substitution", "a,z,e,r,t,y,u,i,o,p,q,s,d,f,g,h,j,k,l,m,w,x,c,v,b,n")
         'LWZLMOMWMOGF'
         '''
-        logging.info("substitution_encryption")
-
         self._check()
 
         encryptedMessage = ""
@@ -42,8 +40,6 @@ class SubstitutionCipher(Cipher):
         >>> decrypt("LWZLMOMWMOGF",  "a,z,e,r,t,y,u,i,o,p,q,s,d,f,g,h,j,k,l,m,w,x,c,v,b,n")
         'SUBSTITUTION'
         '''
-        logging.info('substitution_decryption')
-
         self._check()
 
         decryptedMessage = ""

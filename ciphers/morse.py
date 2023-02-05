@@ -20,18 +20,7 @@ class MorseCode(SubstitutionCipher):
         >>> encrypt("Code Morse")
         '-.-. --- -.. .  -- --- .-. ... .'
         '''
-        logging.info('morse_encryption')
-
-        self._check()
-
-        encryptedMessage = ""
-
-        for letter in self._source.upper():
-            search = string.ascii_uppercase.find(letter)
-
-            encryptedMessage += letter if search < 0 else self.__alphabet[search] + ' ' if ''.join(sorted(self.__alphabet)) != string.ascii_uppercase else self.__alphabet[search]
-            
-        return encryptedMessage
+        return super().encrypt()
     
     def decrypt(self) -> str:
         '''
@@ -39,8 +28,6 @@ class MorseCode(SubstitutionCipher):
         >>> decrypt("-.-. --- -.. .  -- --- .-. ... .")
         'CODE MORSE'
         '''
-        logging.info('morse_decryption')
-
         morseEquivalent = dict({'.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F', '--.': 'G', '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y', '--..': 'Z', '': ' '})
 
         decryptedMessage = ""
