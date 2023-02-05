@@ -6,11 +6,11 @@ from exceptions.configurationvalidation import ConfigurationValidationException
 from ciphers.cipher import Cipher
 
 class SubstitutionCipher(Cipher):
-    def __init__(self, _source: str, __alphabet: str | None) -> None:
+    def __init__(self, _source: str, __alphabet: str) -> None:
         Cipher.__init__(self, _source)
         self.__alphabet = __alphabet.upper().split(',')
 
-    def __check(self) -> None:
+    def _check(self) -> None:
         if len(self.__alphabet) != 26:
             raise ConfigurationValidationException('Alphabet must contain 26 letters')
         
@@ -25,7 +25,7 @@ class SubstitutionCipher(Cipher):
         '''
         logging.info("substitution_encryption")
 
-        self.__check()
+        self._check()
 
         encryptedMessage = ""
 
@@ -39,15 +39,15 @@ class SubstitutionCipher(Cipher):
     def decrypt(self) -> str:
         '''
         Decrypts the message entered by the user using the substitution method.
-        >>> substitution_encryption("LWZLMOMWMOGF",  "a,z,e,r,t,y,u,i,o,p,q,s,d,f,g,h,j,k,l,m,w,x,c,v,b,n")
+        >>> decrypt("LWZLMOMWMOGF",  "a,z,e,r,t,y,u,i,o,p,q,s,d,f,g,h,j,k,l,m,w,x,c,v,b,n")
         'SUBSTITUTION'
         '''
         logging.info('substitution_decryption')
 
-        self.__check()
+        self._check()
 
         decryptedMessage = ""
-
+        
         for letter in self._source.upper():
                 search = ''.join(self.__alphabet).find(letter)
 
