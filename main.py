@@ -11,6 +11,7 @@ from ciphers.substitution import SubstitutionCipher
 from ciphers.morse import MorseCode
 
 @click.group()
+@click.version_option(version='v1.0.0 (05.02.2023)', prog_name='Cipher')
 @click.pass_context
 def cli(ctx):
     '''
@@ -54,6 +55,17 @@ def substitution(ctx, message: str, alphabet: str, decrypted: bool):
     '''
     substitution = SubstitutionCipher(message, alphabet)
     print(substitution.decrypt() if decrypted else substitution.encrypt())
+
+@cli.command()
+@click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
+@click.option('-d', '--decrypted', is_flag=True, default=False, help='Allows to decrypt a message')
+@click.pass_context
+def morse(ctx, message: str, decrypted: bool):
+    '''
+    Encrypt or decrypt the message entrered by the user using Morse code
+    '''
+    morse = MorseCode(message)
+    print(morse.decrypt() if decrypted else morse.encrypt())
 
 @cli.command()
 @click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
