@@ -7,6 +7,7 @@ from exceptions.configurationvalidation import ConfigurationValidationException
 
 from ciphers.caesar import CaesarCipher
 from ciphers.vigenere import VigenereCipher
+from ciphers.substitution import SubstitutionCipher
 
 @click.group()
 @click.pass_context
@@ -41,6 +42,18 @@ def vigenere(ctx, message: str, key: str, decrypted: bool):
     vigenere = VigenereCipher(message, key)
     print(vigenere.decrypt() if decrypted else vigenere.encrypt())
 
+@cli.command()
+@click.option('-m', '--message', type=str, prompt=True, help='Message to be encrypted')
+@click.option('-a', '--alphabet', type=str, prompt=True, help='Substitution alphabet' )
+@click.option('-d', '--decrypted', is_flag=True, default=False, help='Allows to decrypt a message')
+@click.pass_context
+def substitution(ctx, message: str, alphabet: str, decrypted: bool):
+    '''
+    Encrypt or decrypt the message entrered by the user using Substitution cipher
+    '''
+    substitution = SubstitutionCipher(message, alphabet)
+    print(substitution.decrypt() if decrypted else substitution.encrypt())
+
 @click.command()
 def main() -> None:
     pass
@@ -60,5 +73,4 @@ if __name__ == '__main__':
         cli()
 
     except ConfigurationValidationException as e:
-        logging.error("CONFIGURATIONS ERROR")
         logging.error(e.message)
